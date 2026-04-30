@@ -42,8 +42,11 @@ let twoDec = false;
 let triedZeroDiv = false;
 
 const updateOutput = () => {
+    (firstNum === "") ? firstNum = undefined : doNothing();
+    (secondNum === "") ? secondNum = undefined : doNothing();
     output.textContent = "";
     if (currentlyOperating === false) {
+        (firstNum === undefined) ? currentEquation = "0" :
         (operator === undefined && secondNum === undefined) ? currentEquation = `${firstNum}` :
         (secondNum === undefined) ? currentEquation = `${firstNum} ${operatorSymbol}` :
         currentEquation = `${firstNum} ${operatorSymbol} ${secondNum}`;
@@ -145,7 +148,7 @@ const makeNegative = (num) => {
 }
 
 const makePositive = (num => {
-    (num === "first") ? firstNum = "" : (num === "second") ? secondNum = "" : doNothing();
+    (num === "first") ? firstNum = undefined : (num === "second") ? secondNum = undefined : doNothing();
     updateOutput();
 })
 
@@ -154,6 +157,7 @@ const updateCurrentOperator = (btn) => {
     decimalCheck();
     if (operator === undefined) {
         readyToClear = false;
+        (firstNum === undefined) ? firstNum = 0 : doNothing();
         switch (btn) {
             case ("add") :
                 if (firstNum === "-") {
@@ -235,6 +239,14 @@ const clearCalc = () => {
     operator = undefined;
 };
 
+const backspace = () => {
+    (secondNum !== undefined) ? secondNum = secondNum.slice(0, -1) :
+    (operator !== undefined) ? operator = undefined :
+    (firstNum !== undefined) ? firstNum = firstNum.slice(0, -1) :
+    doNothing();
+    updateOutput();
+}
+
 const clickBtn = (e) => {
     const btnPressed = e.target.id;
     switch (btnPressed) {
@@ -255,6 +267,9 @@ const clickBtn = (e) => {
             break;
         case "clear" :
             clearCalc();
+            break;
+        case "backspace" :
+            backspace();
             break;
         default :
             console.log("ERROR");
