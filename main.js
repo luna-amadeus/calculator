@@ -37,9 +37,11 @@ const operate = () => {
 };
 
 const updateCurrentNum = (btn) => {
-    firstNum = Number.parseInt(btn);
-    secondNum = Number.parseInt(btn);
-    console.log(firstNum);
+    const newNum = parseInt(btn);
+    (firstNum === undefined) ? firstNum = newNum :
+    (operator === undefined) ? firstNum = firstNum * 10 + newNum :
+    (secondNum === undefined) ? secondNum = newNum :
+    secondNum = secondNum * 10 + newNum;
 };
 
 const updateCurrentOperator = (btn) => {
