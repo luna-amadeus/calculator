@@ -37,8 +37,8 @@ const operate = () => {
 };
 
 const updateCurrentNum = (btn) => {
-    firstNum = btn;
-    secondNum = btn;
+    firstNum = Number.parseInt(btn);
+    secondNum = Number.parseInt(btn);
     console.log(firstNum);
 };
 
@@ -60,11 +60,11 @@ const updateCurrentOperator = (btn) => {
 };
 
 const decimal = () => {
-    firstNum += ".";
+    firstNum = firstNum + ".";
 };
 
 const completeEquation = () => {
-    operate();
+    console.log(operate());
 };
 
 const clearCalc = () => {
@@ -74,15 +74,30 @@ const clearCalc = () => {
 const clickBtn = (e) => {
     const btnPressed = e.target.id;
     switch (btnPressed) {
+        case "1" : case "2" : case "3" : case "4" : case "5" : case "6" : case "7" : case "8" : case "9" : case "0" :
+            updateCurrentNum(btnPressed);
+            break;
         case "add" :
         case "subtract" :
         case "multiply" :
         case "divide" :
             updateCurrentOperator(btnPressed);
             break;
+        case "point" :
+            decimal();
+            break;
+        case "equals" :
+            completeEquation();
+            break;
+        case "clear" :
+            clearCalc();
+            break;
+        default :
+            console.log("ERROR");
+            break;
     }
 };
 
 
 
-btns.forEach(btn => addEventListener("click", (e) => clickBtn(e)));
+btns.forEach(btn => btn.addEventListener("click", (e) => clickBtn(e)));
