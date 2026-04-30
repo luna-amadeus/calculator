@@ -27,50 +27,95 @@ const divide = (a, b) => {
     return a / b;
 };
 
+
+//Variables
 let firstNum;
 let secondNum;
 let operator;
-let currentNum = "firstNum";
+let operatorSymbol;
+let currentEquation;
+let currentlyOperating = false;
+let readyToClear = false;
 
+const updateOutput = () => {
+    output.textContent = "";
+    if (currentlyOperating === false) {
+        (operator === undefined && secondNum === undefined) ? currentEquation = `${firstNum}` :
+        (secondNum === undefined) ? currentEquation = `${firstNum} ${operatorSymbol}` :
+        currentEquation = `${firstNum} ${operatorSymbol} ${secondNum}`;
+        output.textContent = currentEquation;
+    } else {
+        output.textContent = currentEquation;
+        firstNum = currentEquation;
+        currentlyOperating = false;
+    }
+}
+
+
+
+
+//actual calculator
 const operate = () => {
-    return operator(firstNum, secondNum);
+    currentEquation = operator(firstNum, secondNum);
+    currentlyOperating = true;
+    updateOutput();
+    readyToClear = true;
 };
 
+//press number button
 const updateCurrentNum = (btn) => {
-    const newNum = parseInt(btn);
-    (firstNum === undefined) ? firstNum = newNum :
-    (operator === undefined) ? firstNum = firstNum * 10 + newNum :
-    (secondNum === undefined) ? secondNum = newNum :
-    secondNum = secondNum * 10 + newNum;
+    if (readyToClear === false) {
+        const newNum = parseInt(btn, 10);
+        (firstNum === undefined) ? firstNum = newNum :
+        (operator === undefined) ? firstNum = firstNum * 10 + newNum :
+        (secondNum === undefined) ? secondNum = newNum :
+        secondNum = secondNum * 10 + newNum;
+    } else {
+        clearCalc();
+        readyToClear = false;
+        updateCurrentNum(btn);
+    }
+    
+    updateOutput();
 };
 
+
+//press operator
 const updateCurrentOperator = (btn) => {
+    readyToClear = false;
     switch (btn) {
         case ("add") :
             operator = add;
+            operatorSymbol = "+";
             break;
         case ("subtract") :
             operator = subtract;
+            operatorSymbol = "-";
             break;
         case ("multiply") :
             operator = multiply;
+            operatorSymbol = "x"
             break;
         case ("divide") :
             operator = divide;
+            operatorSymbol = "/";
             break;
     }
+    secondNum = undefined;
+    updateOutput();
 };
+
 
 const decimal = () => {
     firstNum = firstNum + ".";
-};
-
-const completeEquation = () => {
-    console.log(operate());
+    updateOutput();
 };
 
 const clearCalc = () => {
-    console.log("The calculator has been cleared");
+    output.textContent = "0"
+    firstNum = undefined;
+    secondNum = undefined;
+    operator = undefined;
 };
 
 const clickBtn = (e) => {
@@ -89,7 +134,7 @@ const clickBtn = (e) => {
             decimal();
             break;
         case "equals" :
-            completeEquation();
+            operate();
             break;
         case "clear" :
             clearCalc();
