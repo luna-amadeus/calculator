@@ -2,8 +2,32 @@ const btns = document.querySelectorAll("button");
 const display = document.querySelector("#display");
 const output = document.querySelector("#output");
 const zeroBox = document.querySelector("#zerowarningbox");
+const body = document.querySelector("body");
 
 
+body.addEventListener("keyup", (e) => {
+    
+    if (!e.shiftKey) {
+        if ((e.code.includes("Digit") || e.code.includes("Numpad")) && (/\d/.test(e.code.at(-1)) === true)) (e.target.id = e.code.at(-1));
+        if (e.code === "Minus") (e.target.id = "subtract");
+        if ((e.code === "Equal") || e.code.includes("Enter")) (e.target.id = "equals");
+        if (e.code === "Slash") (e.target.id = "divide");
+        if (e.code === "Period") (e.target.id = "point");
+    } else {
+        if (e.code === "Digit8") (e.target.id = "multiply");
+        if (e.code === "Equal") (e.target.id = "add");
+    }
+    if (e.code === "NumpadAdd") (e.target.id = "add");
+    if (e.code === "NumpadSubtract") (e.target.id = "subtract");
+    if (e.code === "NumpadMultiply") (e.target.id = "multiply");
+    if (e.code === "NumpadDivide") (e.target.id = "divide");
+    if (e.code.includes("Enter")) (e.target.id = "equals");
+    if (e.code === "NumpadDecimal") (e.target.id = "point");
+    if (e.code === "KeyC") (e.target.id = "clear");
+    if (e.code === "Backspace") (e.target.id = "backspace");
+    clickBtn(e);
+    e.target.id = null;
+})
 
 
 
@@ -240,15 +264,19 @@ const clearCalc = () => {
 };
 
 const backspace = () => {
+    if (readyToClear === true) {
+        clearCalc();
+    } else {
     (secondNum !== undefined) ? secondNum = secondNum.slice(0, -1) :
     (operator !== undefined) ? operator = undefined :
     (firstNum !== undefined) ? firstNum = firstNum.slice(0, -1) :
     doNothing();
     updateOutput();
 }
+}
 
 const clickBtn = (e) => {
-    const btnPressed = e.target.id;
+    const btnPressed = e.target.id || e;
     switch (btnPressed) {
         case "1" : case "2" : case "3" : case "4" : case "5" : case "6" : case "7" : case "8" : case "9" : case "0" :
             updateCurrentNum(btnPressed);
@@ -272,7 +300,7 @@ const clickBtn = (e) => {
             backspace();
             break;
         default :
-            console.log("ERROR");
+            console.log("Irrelevant keypress");
             break;
     }
 };
