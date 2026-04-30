@@ -36,6 +36,8 @@ let operatorSymbol;
 let currentEquation;
 let currentlyOperating = false;
 let readyToClear = false;
+let oneDec = false;
+let twoDec = false;
 
 const updateOutput = () => {
     output.textContent = "";
@@ -56,20 +58,22 @@ const updateOutput = () => {
 
 //actual calculator
 const operate = () => {
-    currentEquation = operator(firstNum, secondNum);
+    currentEquation = operator(Number(firstNum), Number(secondNum));
     currentlyOperating = true;
     updateOutput();
     readyToClear = true;
+    secondNum = undefined;
 };
 
 //press number button
 const updateCurrentNum = (btn) => {
     if (readyToClear === false) {
-        const newNum = parseInt(btn, 10);
+        let newNum;
+        newNum = btn;
         (firstNum === undefined) ? firstNum = newNum :
-        (operator === undefined) ? firstNum = firstNum * 10 + newNum :
+        (operator === undefined) ? firstNum += newNum :
         (secondNum === undefined) ? secondNum = newNum :
-        secondNum = secondNum * 10 + newNum;
+        secondNum += newNum;
     } else {
         clearCalc();
         readyToClear = false;
@@ -105,9 +109,26 @@ const updateCurrentOperator = (btn) => {
     updateOutput();
 };
 
+const doNothing = () => {
+    
+}
+
 
 const decimal = () => {
-    firstNum = firstNum + ".";
+    (firstNum === undefined) ? (
+        firstNum = "0.",
+        oneDec = true
+    ) : (operator === undefined && oneDec === false) ? (
+        firstNum = firstNum + ".",
+        oneDec = true,
+        console.log(oneDec)
+    ) : (secondNum === undefined && operator !== undefined) ? (
+        secondNum = "0.",
+        twoDec = true
+    ) : (twoDec === false && operator !== undefined) ? (
+        secondNum = secondNum + ".",
+        twoDec = true
+    ) : doNothing();
     updateOutput();
 };
 
