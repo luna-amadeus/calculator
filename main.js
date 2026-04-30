@@ -15,3 +15,11 @@ const multiply = (a, b) => {
 const divide = (a, b) => {
     return a / b;
 }
+
+let firstNum;
+let secondNum;
+let operator;
+
+const operate = () => {
+    return operator(firstNum, secondNum);
+}
