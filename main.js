@@ -76,10 +76,10 @@ const updateOutput = () => {
         currentEquation = `${firstNum} ${operatorSymbol} ${secondNum}`;
         output.textContent = currentEquation;
     } else {
-        output.textContent = currentEquation;
-        firstNum = currentEquation;
+        output.textContent = currentEquation.toString();
+        firstNum = currentEquation.toString();
         twoDec = false;
-        (firstNum.contains(".")) ? (oneDec = true) : (oneDec = false);
+        (firstNum.includes(".")) ? (oneDec = true) : (oneDec = false);
         currentlyOperating = false;
     }
 }
@@ -123,7 +123,7 @@ const operate = () => {
     decimalCheck();
     divideByZeroCheck();
     if (secondNum !== undefined && secondNum !== "-") {
-        currentEquation = operator(Number(firstNum), Number(secondNum));
+        currentEquation = Number(operator(Number(firstNum), Number(secondNum)).toFixed(2));
         currentlyOperating = true;
         updateOutput();
         readyToClear = true;
@@ -228,6 +228,7 @@ const updateCurrentOperator = (btn) => {
         doNothing();
         }
     } else {
+        console.log("what is happening");  
         operate();
         updateCurrentOperator(btn);
     }
