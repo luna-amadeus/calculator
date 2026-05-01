@@ -70,7 +70,7 @@ const updateOutput = () => {
     (secondNum === "") ? secondNum = undefined : doNothing();
     output.textContent = "";
     if (currentlyOperating === false) {
-        (firstNum === undefined) ? currentEquation = "0" :
+        if (firstNum === undefined) firstNum = "0";
         (operator === undefined && secondNum === undefined) ? currentEquation = `${firstNum}` :
         (secondNum === undefined) ? currentEquation = `${firstNum} ${operatorSymbol}` :
         currentEquation = `${firstNum} ${operatorSymbol} ${secondNum}`;
@@ -78,6 +78,8 @@ const updateOutput = () => {
     } else {
         output.textContent = currentEquation;
         firstNum = currentEquation;
+        twoDec = false;
+        (firstNum.contains(".")) ? (oneDec = true) : (oneDec = false);
         currentlyOperating = false;
     }
 }
@@ -135,13 +137,13 @@ const operate = () => {
 
 //press number button
 const updateCurrentNum = (btn) => {
-    if (btn === "0" && (firstNum === "0" || firstNum === "0." || secondNum === "0" || secondNum === "0.")) {
+    if (btn === "0" && (firstNum === "0" || secondNum === "0" )) {
         doNothing();
     } else {
         if (readyToClear === false) {
             let newNum;
             newNum = btn;
-            (firstNum === undefined || firstNum === "0") ? firstNum = newNum :
+            (firstNum === undefined || (operator === undefined && firstNum === "0")) ? firstNum = newNum :
             (operator === undefined) ? firstNum += newNum :
             (secondNum === undefined || secondNum === "0") ? secondNum = newNum :
             secondNum += newNum;
@@ -156,13 +158,17 @@ const updateCurrentNum = (btn) => {
 };
 
 const decimalCheck = () => {
-    if (oneDec === true && firstNum.at(-1) === ".") {
+    if (oneDec === true && (firstNum.at(-1) === "." || (firstNum !== "0" && firstNum.at(-1) === "0"))) {
+        if (firstNum.at(-1) === ".") oneDec = false;
         firstNum = firstNum.slice(0, -1);
         updateOutput();
+        decimalCheck();
     }
-    if (twoDec === true && secondNum.at(-1) === ".") {
+    if (twoDec === true && (secondNum.at(-1) === "." || (secondNum !=="0" && secondNum.at(-1) ==="0"))) {
+        if (secondNum.at(-1) === ".") twoDec = false;
         secondNum = secondNum.slice(0, -1);
         updateOutput();
+        decimalCheck();
     }
 }
 
@@ -185,7 +191,7 @@ const updateCurrentOperator = (btn) => {
         switch (btn) {
             case ("add") :
                 if (firstNum === "-") {
-                    makePositive(first);
+                    makePositive("first");
                 } else {
                     operator = add;
                     operatorSymbol = "+";
@@ -234,7 +240,7 @@ const doNothing = () => {
 
 const decimal = () => {
     if (readyToClear === false) {
-        (firstNum === undefined) ? (
+        (firstNum === undefined || firstNum === "0") ? (
             firstNum = "0.",
             oneDec = true
         ) : (operator === undefined && oneDec === false) ? (
@@ -261,6 +267,8 @@ const clearCalc = () => {
     firstNum = undefined;
     secondNum = undefined;
     operator = undefined;
+    oneDec = false;
+    twoDec = false;
 };
 
 const backspace = () => {
